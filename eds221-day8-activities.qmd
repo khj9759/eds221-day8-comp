@@ -41,7 +41,38 @@ length_table <- lizards %>%
   summarize(mean = mean(total_length_cm, na.rm= TRUE), std = sd(total_length_cm, na.rm = TRUE))
 ```
 
+facet_wrap()
+
 ```{r}
 ggplot (data=lizards, aes(x=total_length, y= weight)) +
-  geom_point(aes(color= common_name))
+  geom_point(aes(color= common_name)) +
+  facet_wrap(~ common_name, scales = "free")
+```
+
+bar chart
+
+```{r}
+lizard_counts <- lizards %>% 
+  dplyr::count(common_name)
+
+#same : 
+lizards %>% 
+  group_by(common_name) %>%
+  summarize(count =n())
+
+# Use dplyr::count to find the total number of lizards by common name in the lizards dataset
+```
+
+```{r}
+ggplot(data = lizard_counts, aes(x=n, y=fct_reorder(common_name, n))) +
+  geom_col()
+```
+
+```{r}
+ggplot (data=lizards, aes(x=total_length, y= weight, color = weight)) +
+  geom_point() +
+  scale_y_continuous(limits= c(0,100), 
+                     breaks = seq(from = 0, to = 100, by = 20),
+                     expand = c(0,20)) +
+  scale_color_gradient(low = "red", high = "navy")
 ```
