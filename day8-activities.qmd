@@ -1,0 +1,57 @@
+---
+title: "day8-activities"
+format: html
+editor: visual
+---
+
+## Task 1: 
+
+```{r}
+space_launches <- read_csv(here("data","space_launches.csv"))
+```
+
+```{r}
+space_launches %>%
+  filter(launch_year == 2009) %>% 
+  ggplot(aes(y=fct_reorder(type,agency),x = agency)) +
+  geom_point() +
+  facet_wrap(~state_code, scale = "free") 
+```
+
+```{r}
+san_francisco <- read_csv(here("data", "San_Francisco_Communitywide_Greenhouse_Gas_Inventory.csv")) %>%
+  clean_names()
+```
+
+1.  Create a summary table of total annual greenhouse gas emissions (only from Emissions_mtCO2e column) by sector_general
+
+    ```{r}
+    san_francisco_year <- san_francisco %>%
+      group_by(calendar_year, sector_general) %>%
+      summarize(sum_of_emission = sum(emissions_mt_co2e))
+    ```
+
+2.  Create a summary table of total annual greenhouse gas emissions (only from Emissions_mtCO2e column) by year and commodity type
+
+    ```{r}
+    san_francisco_emission <- san_francisco %>% 
+      group_by(calendar_year, commodity_type) %>% 
+      summarize(mean = sum(emissions_mt_co2e), na.rm= TRUE)
+    ```
+
+3.  Create a subset of the data that only contains observations from 2005 on, only for observations where `Sector_Detail2` contains the pattern \"PG&E\", then limit to columns `Calendar_Year`, `Sector_Detail2` and `Emissions_mtCO2e`.
+
+```{r}
+SF_2005 <- san_francisco %>% 
+  filter(calendar_year == 2005,str_detect(sector_detail2, pattern = "PG&E"))
+```
+
+```{r}
+san_francisco_emission <- san_francisco %>% 
+  group_by(calendar_year, sector_general) %>% 
+  summarize(mean = sum(emissions_mt_co2e), na.rm= TRUE)
+
+ggplot(san_francisco_emission, aes (x = calendar_year , y= mean)) +
+  geom_line(aes(color = sector_general)) +
+  labs(x="year", y= "emission (co2e)", title = "San Francisco emission")
+```
