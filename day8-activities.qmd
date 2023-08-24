@@ -53,5 +53,9 @@ san_francisco_emission <- san_francisco %>%
 
 ggplot(san_francisco_emission, aes (x = calendar_year , y= mean)) +
   geom_line(aes(color = sector_general)) +
-  labs(x="year", y= "emission (co2e)", title = "San Francisco emission")
+  labs(x="year", y= "emission (co2e)", title = "San Francisco emission") 
+```
+
+```{r}
+
 ```
